@@ -1,17 +1,8 @@
-package com.demo.springssecurity.entities;
+package com.demo.springssecurity.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+public class UserDto {
 
-@Entity
-public class Users {
-
-	@Id
-//	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	
 	private String name;
 	private String password;
 	
@@ -33,7 +24,11 @@ public class Users {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	public UserDto(int id, String name, String password) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.password = password;
+	}
 	
-	
-
 }

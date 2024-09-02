@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.demo.springssecurity.dao.UserRepo;
+import com.demo.springssecurity.dto.UserDto;
 import com.demo.springssecurity.entities.Users;
 
 @Service
@@ -24,8 +25,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Users getUserById(int id) {
-		return this.userRepo.getById(id);
+	public UserDto getUserById(int id) {
+		
+		Users user = this.userRepo.getById(id);
+		UserDto userDto = new UserDto(user.getId(), user.getName(), user.getPassword());
+		
+		return userDto;
 	}
 
 }
