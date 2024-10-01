@@ -35,18 +35,23 @@ public class JwtFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 
+		System.out.println("In JWT Filter ....");
 		String authHeader = request.getHeader("Authorization");
+		System.out.println("Auth Header : "+authHeader);
 		String token = null;
 		String userName = null;
 
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+			System.out.println("Inisde if, Auth Header is not NULL");
 			token = authHeader.substring(7);
 			userName = jwtService.extractUserName(token);
 		}
 
-		UserDetails userDetails = context.getBean(MyUserDetailsService.class).loadUserByUsername(userName);
+		
 
 		if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+			System.out.println("Inside if User Name is not null");
+			UserDetails userDetails = context.getBean(MyUserDetailsService.class).loadUserByUsername(userName);
 			if (jwtService.validateToken(token, userDetails)) {
 
 				UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -58,6 +63,7 @@ public class JwtFilter extends OncePerRequestFilter {
 		}
 
 		filterChain.doFilter(request, response);
+		System.out.println("In JWT Filter at end ....");
 
 	}
 

@@ -55,7 +55,7 @@ public class JwtServiceImpl {
 		}
 	}
 	
-	private Key getKey() {
+	private SecretKey getKey() {
 		
 		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 		return Keys.hmacShaKeyFor(keyBytes);
@@ -72,10 +72,18 @@ public class JwtServiceImpl {
 		return claimResolver.apply(claims);
 	}
 	
+//	private Claims extractAllClaims(String token) {
+//		return Jwts.parserBuilder()
+//				.setSigningKey(getKey())
+//				.build().parseClaimsJws(token).getBody();
+//	}
+	
 	private Claims extractAllClaims(String token) {
-		return Jwts.parserBuilder()
-				.setSigningKey(getKey())
-				.build().parseClaimsJws(token).getBody();
+		return Jwts.parser()
+				.verifyWith(getKey())
+				.build()
+				.parseSignedClaims(token)
+				.getPayload();
 	}
 	
 	public boolean validateToken(String token, UserDetails userDetails) {

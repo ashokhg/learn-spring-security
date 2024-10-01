@@ -1,6 +1,8 @@
 package com.demo.springssecurity.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,6 +41,7 @@ public class HomeController {
 	@GetMapping("/home")
 	public String home(HttpServletRequest request){
 		
+		System.out.println("In home method");
 		return "Home page : Session id :" + request.getSession().getId();
 	}
 	
@@ -64,7 +67,7 @@ public class HomeController {
 	}
 	
 	@PostMapping("/login")
-	public String login(@RequestBody Users user) {
+	public ResponseEntity<String> login(@RequestBody Users user) {
 		
 		System.out.println("In login controller");
 		Authentication authentication = authenticationManager
@@ -72,9 +75,10 @@ public class HomeController {
 		
 		if(authentication.isAuthenticated()) {
 			System.out.println("User Authenticated ");
-			return jwtService.generateToken(user.getName());
+			String token = jwtService.generateToken(user.getName());
+			return ResponseEntity.ok(token);
 		} else {
-			return "failed";
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect Username or Password");
 		}
 		
 	}
